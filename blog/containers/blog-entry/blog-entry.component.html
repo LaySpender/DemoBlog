@@ -1,0 +1,63 @@
+<article class="blog-list blog-entry row">
+  <div class="col-12">
+    <div class="row">
+      <time class="col-1 blog-entry__date" [dateTime]="publishedDate.getUTCDate()">
+        <span>{{ publishedDate.getFullYear() }}</span>
+        <br />
+        <span class="blog-entry__day-month">{{ publishedDate | date:'dd.MM' }}</span>
+      </time>
+      <div class="col-10">
+        <h1 class="blog-entry__title">
+          <a [routerLink]="['/blog', id]">{{ title }}</a>
+        </h1>
+        <div>
+          von
+          <app-blog-entry-author-link [author]="publisher"></app-blog-entry-author-link>
+          <ng-container *ngIf="categories != null && categories.length > 0">
+            in
+            <ng-container *ngFor="let category of categories; let last = last;">
+              <a [routerLink]="['/blog']" [queryParams]="{ category: category.id }">{{ category.title }}</a>
+              <ng-container *ngIf="!last">, </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="tags != null && tags.length > 0">
+            &nbsp;-&nbsp;
+            <ng-container *ngFor="let tag of tags; let last = last;">
+              <a [routerLink]="['/blog']" [queryParams]="{ tag: tag.id }"><fa-icon [icon]="faTag" size="xs"></fa-icon>&nbsp;{{ tag.title }}</a>
+              <ng-container *ngIf="!last">&nbsp;</ng-container>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="blog-entry__text">
+          <app-blog-entry-text [teaserText]="teaserText" [text]="text" [isCollapsible]="isPreview"></app-blog-entry-text>
+        </div>
+      </div>
+    </div>
+    <div class="row blog-entry__bottom">
+      <div class="offset-1 col-11 blog-entry__menu">
+        <ul class="blog-entry__menu-actions">
+          <li *ngIf="isPreview">
+            <a [routerLink]="['/blog', id]">{{ numberOfComments }} Kommentare</a>
+          </li>
+          <li *ngIf="votingExperience != votingExperienceType.Disabled">
+            <div [ngSwitch]="votingExperience">
+              <app-blog-entry-rating *ngSwitchCase="votingExperienceType.Ratings" [averageRating]="averageRating"
+                [ratingCount]="ratingCount" (rate)="handleRate($event)"></app-blog-entry-rating>
+              <app-blog-entry-like *ngSwitchCase="votingExperienceType.Likes" [likesCount]="likesCount" [isLikedByUser]="isLikedByUser"
+                [likers]="likers" (like)="handleLike()" (dislike)="handleDislike()"></app-blog-entry-like>
+            </div>
+          </li>
+          <li class="blog-entry__menu-link" *ngIf="!isPreview">
+            <button type="button" class="btn btn-link" (click)="handleWriteCommentClick()">Kommentieren</button>
+          </li>
+          <li class="blog-entry__menu-link">
+            <a [href]="linkPerMail">Link per E-Mail senden</a>
+          </li>
+          <li *ngIf="blogEntry.currentUserCanEdit" class="blog-entry__menu-link">
+            <a [href]="editLink">Bearbeiten</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</article>

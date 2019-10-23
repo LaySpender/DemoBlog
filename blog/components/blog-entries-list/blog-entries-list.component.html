@@ -1,0 +1,4 @@
+<ng-container *ngFor="let blogEntry of blogEntries; trackBy: trackBlogEntry">
+  <app-blog-entry [blogEntry]="blogEntry" [currentUser]="currentUser" [votingExperience]="votingExperience" [isPreview]="true"></app-blog-entry>
+  <app-blog-entry-separator></app-blog-entry-separator>
+</ng-container>

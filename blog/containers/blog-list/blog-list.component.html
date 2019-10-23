@@ -1,0 +1,36 @@
+<main class="row">
+  <aside class="col-3 col-xl-2 h-100">
+    <div class="row mb-3">
+      <div class="col-12">
+        <app-blog-alert-link></app-blog-alert-link>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-blog-tools></app-blog-tools>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-filter-side-bar></app-filter-side-bar>
+      </div>
+    </div>
+  </aside>
+  <div class="col-9 col-xl-10">
+    <ng-container [ngSwitch]="(contentLoadingState$ | async)">
+      <ng-container *ngSwitchCase="loadingState.Loaded">
+
+        <app-blog-entries-list [currentUser]="currentUser$ | async" [blogEntries]="blogEntries$ | async"
+          [votingExperience]="votingExperience$ | async"></app-blog-entries-list>
+        <div class="row" *ngIf="showPagination$ | async">
+          <div class="col-12 d-flex justify-content-center">
+            <ngb-pagination [collectionSize]="totalNumberOfItems$ | async" (pageChange)="changePage($event)" [page]="currentPage$ | async"
+              [pageSize]="pageSize$ | async" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
+          </div>
+        </div>
+
+      </ng-container>
+      <app-loading-animation *ngSwitchCase="loadingState.Loading" loadingMessage="Blogbeiträge werden geladen"></app-loading-animation>
+    </ng-container>
+  </div>
+</main>
